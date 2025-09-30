@@ -45,7 +45,7 @@ def plot_task(task):
 # -----------------------------
 if __name__ == "__main__":
     # Replace this with your ARC task JSON path
-    path = "data/evaluation/fc754716.json"
+    path = "../data/evaluation/fc754716.json"
 
     with open(path, "r") as f:
         task = json.load(f)

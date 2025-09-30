@@ -22,6 +22,7 @@ def solve(grid):
             else:
                 new_row.append(0)
         output.append(new_row)
+    output = np.array(output, dtype=int)
     return output
 
-print(np.array(test))
+print(solve(np.array(test)))
