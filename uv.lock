@@ -54,6 +54,7 @@ dependencies = [
     { name = "langchain-ollama" },
     { name = "matplotlib" },
     { name = "ollama" },
+    { name = "regex" },
     { name = "torch" },
     { name = "transformers" },
 ]
@@ -66,6 +67,7 @@ requires-dist = [
     { name = "langchain-ollama", specifier = ">=0.3.8" },
     { name = "matplotlib", specifier = ">=3.10.6" },
     { name = "ollama", specifier = ">=0.6.0" },
+    { name = "regex", specifier = ">=2025.9.18" },
     { name = "torch", specifier = ">=2.8.0" },
     { name = "transformers", specifier = ">=4.56.2" },
 ]

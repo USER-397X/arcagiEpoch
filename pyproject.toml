@@ -11,6 +11,7 @@ dependencies = [
     "langchain-ollama>=0.3.8",
     "matplotlib>=3.10.6",
     "ollama>=0.6.0",
+    "regex>=2025.9.18",
     "torch>=2.8.0",
     "transformers>=4.56.2",
 ]

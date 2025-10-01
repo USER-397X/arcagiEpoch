@@ -7,3 +7,4 @@ def evaluate(task, program):
         if pred is None or not np.array_equal(pred, np.array(ex["output"])):
             return False
     return True
+
