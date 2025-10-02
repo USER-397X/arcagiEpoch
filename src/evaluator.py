@@ -10,12 +10,16 @@ def evaluate(task, program):
             return pred, False
         
         try:
-            # Ensure we have numpy arrays with consistent types
+            # Convert both arrays to numpy arrays with explicit int dtype
             pred_array = np.asarray(pred, dtype=int)
             expected_array = np.asarray(ex["output"], dtype=int)
-            
+            print(pred_array)
+            print(expected_array)
+
+
             # Check if shapes match first
             if pred_array.shape != expected_array.shape:
+                print(f"Error: Output dimensions don't match. Expected shape {expected_array.shape}, but got {pred_array.shape}")
                 return pred_array, False
                 
             # Use element-wise comparison and check if all elements are equal
@@ -25,9 +29,9 @@ def evaluate(task, program):
                 return pred_array, True
                 
         except Exception as e:
-            print(f"Error during evaluation: {str(e)}")
-            return np.asarray(pred), False
+            print(f"Error: Failed to compare outputs - {str(e)}")
+            return pred, False
             
     # If we get here, none of the test cases matched
-    return np.asarray(pred), False
+    return pred, False
 

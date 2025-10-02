@@ -15,32 +15,32 @@ def plot_prediction(result, task, task_id):
     for i, example in enumerate(train_examples):
         # Input
         plt.subplot(num_train + 1, 3, i * 3 + 1)
-        plt.imshow(example['input'], cmap='tab10')
+        plt.imshow(example['input'])
         plt.title(f'Training Input {i+1}')
         plt.axis('off')
         
         # Expected Output
         plt.subplot(num_train + 1, 3, i * 3 + 3)
-        plt.imshow(example['output'], cmap='tab10')
+        plt.imshow(example['output'])
         plt.title(f'Training Output {i+1}')
         plt.axis('off')
     
     # Plot test/prediction on the last row
     # Test Input
     plt.subplot(num_train + 1, 3, num_train * 3 + 1)
-    plt.imshow(task['test'][0]['input'], cmap='tab10')
+    plt.imshow(task['test'][0]['input'])
     plt.title('Test Input')
     plt.axis('off')
     
     # Prediction
     plt.subplot(num_train + 1, 3, num_train * 3 + 2)
-    plt.imshow(result, cmap='tab10')
+    plt.imshow(result)
     plt.title('Prediction')
     plt.axis('off')
     
     # Expected Output
     plt.subplot(num_train + 1, 3, num_train * 3 + 3)
-    plt.imshow(task['test'][0]['output'], cmap='tab10')
+    plt.imshow(task['test'][0]['output'])
     plt.title('Expected Output')
     plt.axis('off')
     

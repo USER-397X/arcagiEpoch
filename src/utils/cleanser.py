@@ -496,13 +496,12 @@ def extract_code(code):
     return last_any_solve.strip() if last_any_solve else ""
 
 def extract_function_def(generated_text: str) -> str:
-
+    # Extract code from code blocks if present
     code_block_match = re.search(r"```(?:python)?([\s\S]*?)```", generated_text, re.DOTALL | re.IGNORECASE)
     if code_block_match:
         code = code_block_match.group(1).strip()
     else:
         code = generated_text.strip()
-
 
     # Remove any stray leading or trailing fences
     code = re.sub(r'^```(?:python)?\s*', '', code, re.IGNORECASE)
@@ -510,25 +509,27 @@ def extract_function_def(generated_text: str) -> str:
 
     # Common header pattern with optional return type
     header_pattern = r"def\s+{name}\s*\([^)]*\)\s*(->\s*[^:]+)?\s*:"
-    body_pattern = r"[\s\S]+?"
+    body_pattern = r"[\s\S]+?return\s+(?:result|grid|output)"  # Stop at return statement
     lookahead = r"(?=\n\s*def\s+[a-zA-Z_]\w*\s*\(|$)"
 
-    # Prefer def p
-    p_pattern = header_pattern.format(name="p") + body_pattern + lookahead
-    func_match = re.search(p_pattern, code, re.DOTALL)
+    # Try patterns in order of preference
+    patterns = [
+        header_pattern.format(name="p"),  # First try def p
+        header_pattern.format(name="transform"),  # Then try def transform
+        r"def\s+[a-zA-Z_]\w*\s*\([^)]*\)\s*(->\s*[^:]+)?\s*:"  # Finally try any function
+    ]
 
-    if not func_match:
-        transform_pattern = header_pattern.format(name="transform") + body_pattern + lookahead
-        func_match = re.search(transform_pattern, code, re.DOTALL)
+    final_code = None
+    for pattern in patterns:
+        func_match = re.search(pattern + body_pattern + lookahead, code, re.DOTALL)
+        if func_match:
+            final_code = func_match.group(0).strip()
+            break
 
-    if not func_match:
-        any_pattern = r"def\s+[a-zA-Z_]\w*\s*\([^)]*\)\s*(->\s*[^:]+)?\s*:" + body_pattern + lookahead
-        func_match = re.search(any_pattern, code, re.DOTALL)
-
-    if func_match:
-        final_code = func_match.group(0).strip()
-    else:
+    if not final_code:
         final_code = code
+
+    # Remove any remaining code blocks and clean up
     final_code = re.sub(r"```.*?```", "", final_code, re.DOTALL).strip()
 
     return final_code

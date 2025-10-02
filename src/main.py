@@ -89,7 +89,7 @@ def main():
         # Save the plan in output/reasoning/id.txt
         output_path = output_dir / 'reasoning' / Path(id).with_suffix('.txt') 
         output_path.write_text(plan)
-        print(f"Saved plan for task {id} to {output_path}")
+        print(f"Saved plan for task {id}")
 
         #Create program
         program = synthesize_program(plan)
@@ -98,14 +98,14 @@ def main():
         #Save the program in output/programs/id.py
         output_path = output_dir / 'programs' / Path(id).with_suffix('.py') 
         output_path.write_text(program)
-        print(f"Saved program for task {id} to {output_path}")
+        print(f"Saved program for task {id}")
 
         # Evaluate program
         grid, correct = evaluate(task,program)
 
         #Save the visualized result in output/visuals/id.png
         plot_prediction(grid, task, id)
-        print(f"Saved result for task {id} to {output_path}")
+        print(f"Saved result for task {id}")
 
     return 
 
