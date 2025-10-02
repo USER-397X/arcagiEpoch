@@ -19,14 +19,8 @@ for file in train_folder.glob("*.json"):  # only JSON files
         train_tasks[file.name] = json.load(f)
 
 eval_tasks_small = dict(islice(eval_tasks.items(), 10))
+train_tasks_small = dict(islice(train_tasks.items(), 50))
 
-sync = ['00576224.json', 
-        '009d5c81.json', 
-        '0dbd492.json', 
-        '03560426.json', 
-        '0607ce86.json', 
-        '0692e18c.json', 
-        '070dd51e.json']
 
 # eval_tasks_synced = {k: eval_tasks[k] for k in sync}
 

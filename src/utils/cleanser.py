@@ -429,6 +429,36 @@ def solve(grid):
 输入：
 """
 
+def extract_reasoning(text):
+    """
+    Extracts the text between a single pair of <reasoning> tags.
+    Returns a clean, structured explanation or empty string if no reasoning block is found.
+    """
+    # Find content between <reasoning> tags
+    match = re.search(r"<reasoning>(.*?)</reasoning>", text, re.DOTALL)
+    if not match:
+        return text
+    
+    reasoning = match.group(1).strip()
+    
+    # Clean up the reasoning text
+    # Remove unnecessary whitespace
+    reasoning = re.sub(r'\n\s*\n', '\n\n', reasoning)
+    
+    return reasoning.strip()
+
+def remove_think(text):
+    """
+    Removes all content between <think> and </think> tags from the input text.
+    Returns the text with all thinking sections removed.
+    """
+    # Remove all content between <think> tags
+    cleaned_text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+    
+    # Clean up any double newlines or excessive whitespace that might be left
+    cleaned_text = re.sub(r'\n\s*\n', '\n\n', cleaned_text)
+    return cleaned_text.strip()
+
 def extract_code(code):
     """
     Extracts the Python code block from a text that may contain <think>...</think>
@@ -466,4 +496,40 @@ def extract_code(code):
     
     return last_any_solve.strip() if last_any_solve else ""
 
-# print(extract_code(test))
+def extract_function_def(generated_text: str) -> str:
+
+    code_block_match = re.search(r"```(?:python)?([\s\S]*?)```", generated_text, re.DOTALL | re.IGNORECASE)
+    if code_block_match:
+        code = code_block_match.group(1).strip()
+    else:
+        code = generated_text.strip()
+
+
+    # Remove any stray leading or trailing fences
+    code = re.sub(r'^```(?:python)?\s*', '', code, re.IGNORECASE)
+    code = re.sub(r'\s*```$', '', code)
+
+    # Common header pattern with optional return type
+    header_pattern = r"def\s+{name}\s*\([^)]*\)\s*(->\s*[^:]+)?\s*:"
+    body_pattern = r"[\s\S]+?"
+    lookahead = r"(?=\n\s*def\s+[a-zA-Z_]\w*\s*\(|$)"
+
+    # Prefer def p
+    p_pattern = header_pattern.format(name="p") + body_pattern + lookahead
+    func_match = re.search(p_pattern, code, re.DOTALL)
+
+    if not func_match:
+        transform_pattern = header_pattern.format(name="transform") + body_pattern + lookahead
+        func_match = re.search(transform_pattern, code, re.DOTALL)
+
+    if not func_match:
+        any_pattern = r"def\s+[a-zA-Z_]\w*\s*\([^)]*\)\s*(->\s*[^:]+)?\s*:" + body_pattern + lookahead
+        func_match = re.search(any_pattern, code, re.DOTALL)
+
+    if func_match:
+        final_code = func_match.group(0).strip()
+    else:
+        final_code = code
+    final_code = re.sub(r"```.*?```", "", final_code, re.DOTALL).strip()
+
+    return final_code
