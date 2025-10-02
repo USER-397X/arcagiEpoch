@@ -1,28 +1,35 @@
 from arc_loader import eval_tasks_small
+from evaluator import evaluate
+
 import numpy as np
 
 task = 'fc754716.json'
 
-test = eval_tasks_small[task]['test'][0]['input']
+test_input = eval_tasks_small[task]['test'][0]['input']
+test_output = eval_tasks_small[task]['test'][0]['output']
 
-def solve(grid):
-    val = 0
-    for row in grid:
-        for cell in row:
-            if cell != 0:
-                val = cell
+def p(grid: list[list[int]]) -> list[list[int]]:
+    if not grid:
+        return []
     rows = len(grid)
-    cols = len(grid[0])
-    output = []
+    cols = len(grid[0]) if rows > 0 else 0
+    seed_value = None
     for i in range(rows):
-        new_row = []
+        for j in range(cols):
+            if grid[i][j] != 0:
+                seed_value = grid[i][j]
+                break
+        if seed_value is not None:
+            break
+    if seed_value is None:
+        return [row[:] for row in grid]
+    output = [[0 for _ in range(cols)] for _ in range(rows)]
+    for i in range(rows):
         for j in range(cols):
             if i == 0 or i == rows - 1 or j == 0 or j == cols - 1:
-                new_row.append(val)
-            else:
-                new_row.append(0)
-        output.append(new_row)
-    output = np.array(output, dtype=int)
+                output[i][j] = seed_value
     return output
 
-print(solve(np.array(test)))
+pred = np.array(p(test_input))
+print(pred)
+print(np.array_equal(np.array(pred), np.array(test_output)))

@@ -435,13 +435,12 @@ def extract_reasoning(text):
     Returns a clean, structured explanation or empty string if no reasoning block is found.
     """
     # Find content between <reasoning> tags
-    match = re.search(r"<reasoning>(.*?)</reasoning>", text, re.DOTALL)
+    match = re.search(r"<reasoning>([\s\S]*?)</reasoning>", text, re.IGNORECASE | re.DOTALL)
     if not match:
         return text
     
     reasoning = match.group(1).strip()
-    
-    # Clean up the reasoning text
+
     # Remove unnecessary whitespace
     reasoning = re.sub(r'\n\s*\n', '\n\n', reasoning)
     
