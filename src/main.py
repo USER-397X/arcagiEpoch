@@ -11,7 +11,7 @@ from utils.plotprediction import plot_prediction
 
 
 llm = OllamaLLM(
-    model="deepseek-r1:32b",
+    model="qwen3:30b",
     num_predict= 4096,
     num_ctx=4096,
     temperature=0.7
@@ -23,6 +23,7 @@ llm_code = OllamaLLM(
     num_ctx=4096,
     temperature=0.1
 )
+
 
 
 def create_reasoning(task):
@@ -73,6 +74,7 @@ def synthesize_program(steps):
     )
     
     return llm_code.invoke(prompt)
+
 
 
 def main():

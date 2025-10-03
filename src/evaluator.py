@@ -13,9 +13,6 @@ def evaluate(task, program):
             # Convert both arrays to numpy arrays with explicit int dtype
             pred_array = np.asarray(pred, dtype=int)
             expected_array = np.asarray(ex["output"], dtype=int)
-            print(pred_array)
-            print(expected_array)
-
 
             # Check if shapes match first
             if pred_array.shape != expected_array.shape:

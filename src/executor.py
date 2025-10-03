@@ -2,7 +2,7 @@ import numpy as np
 import re
 
 def run_program(code, grid):
-    local_env = {}
+    local_env = {'np': np}  # Make numpy available to the executed code
 
     try:
         exec(code, {}, local_env)  # don't expose globals
